@@ -24,8 +24,10 @@ public abstract class ChessPiece {
         return color;
     }
     public void move(String position) throws IllegalChessMoveException {
-        if(!checkPosition(position)) throw  new IllegalChessMoveException("Nedozvoljen potez");
+        if(!checkMove(position)) throw  new IllegalChessMoveException("Nedozvoljen potez");
         this.position = position;
     }
-    public abstract boolean checkPosition(String position); //svaka figura ima svoje dozvoljene kretnje
+    public abstract boolean checkMove(String position); //svaka figura ima svoje dozvoljene kretnje
+
+
 }
