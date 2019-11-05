@@ -1,7 +1,8 @@
 package ba.unsa.etf.rpr;
 
 public abstract class ChessPiece {
-    String position;
+    protected String position;
+
     public enum Color{
         White("W"),
         Black("B");
@@ -22,5 +23,9 @@ public abstract class ChessPiece {
     public Color getColor(){
         return color;
     }
-    public abstract void move(String position);
+    public void move(String position) throws IllegalChessMoveException {
+        if(!checkPosition(position)) throw  new IllegalChessMoveException("Nedozvoljen potez");
+        this.position = position;
+    }
+    public abstract boolean checkPosition(String position); //svaka figura ima svoje dozvoljene kretnje
 }
