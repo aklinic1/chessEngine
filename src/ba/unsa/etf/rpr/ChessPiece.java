@@ -29,5 +29,19 @@ public abstract class ChessPiece {
     }
     public abstract boolean checkMove(String position); //svaka figura ima svoje dozvoljene kretnje
 
+    public boolean checkPosition(String position){
+        if(position.length() > 2) return false;
+        else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
+            return false;
+        }
+        else if(position.charAt(0) < 'A' || position.charAt(0) >'H') {
+            return false;
+        }
+        else if(position.charAt(1) < '1' || position.charAt(1) > '8') {
+            return false;
+        }
+        return true;
+    }
+
 
 }
