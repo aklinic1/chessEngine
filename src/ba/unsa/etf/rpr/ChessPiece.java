@@ -17,6 +17,11 @@ public abstract class ChessPiece {
     }
     public static Color color;
 
+    public ChessPiece(String position, Color color) {
+        this.position = position;
+        this.color = color;
+    }
+
     public String getPosition() {
         return position;
     }
@@ -29,7 +34,7 @@ public abstract class ChessPiece {
     }
     public abstract boolean checkMove(String position); //svaka figura ima svoje dozvoljene kretnje
 
-    public boolean checkPosition(String position){
+    public boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table
         if(position.length() > 2) return false;
         else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
             return false;
@@ -42,6 +47,11 @@ public abstract class ChessPiece {
         }
         return true;
     }
-
+    public int[] setComparablePositionValues(String position, String move){
+        int [] n = new int[4];
+        n[0] = this.position.charAt(0); n[1] = Integer.valueOf(this.position.charAt(1));
+        n[2] = position.charAt(0); n[3] = Integer.valueOf(position.charAt(1));
+        return n;
+    }
 
 }
