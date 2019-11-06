@@ -36,6 +36,7 @@ public abstract class ChessPiece {
     public abstract boolean checkMove(String position); //svaka figura ima svoje dozvoljene kretnje
 
     public boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table
+        if(position == this.position) return false;
         if(position.length() > 2) return false;
         else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
             return false;
