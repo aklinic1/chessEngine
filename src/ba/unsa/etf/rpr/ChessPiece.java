@@ -29,27 +29,12 @@ public abstract class ChessPiece {
         return color;
     }
     public void move(String position) throws IllegalChessMoveException { //prvo provejravamo da li je potez unutar table pa onda da li je validan za neku figuru
-        if(!checkPosition(position) || !this.checkMove(position)) throw  new IllegalChessMoveException("Nedozvoljen potez");
+        if(!this.checkMove(position)) throw  new IllegalChessMoveException("Nedozvoljen potez");
 
         this.position = position;
     }
     public abstract boolean checkMove(String position);  //svaka figura ima svoje dozvoljene kretnje
 
-    public boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je unesena trenutna pozicija
-        //figure te da li je duzina stringa veca od 2
-        if(position == this.position) return false;
-        if(position.length() > 2) return false;
-        else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
-            return false;
-        }
-        else if(position.charAt(0) < 'A' || position.charAt(0) >'H') {
-            return false;
-        }
-        else if(position.charAt(1) < '1' || position.charAt(1) > '8') {
-            return false;
-        }
-        return true;
-    }
     public int[] setComparablePositionValues(String position, String move){
         int [] n = new int[4];
         n[0] = this.position.charAt(0); n[1] = Integer.valueOf(this.position.charAt(1));

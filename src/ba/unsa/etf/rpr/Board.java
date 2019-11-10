@@ -6,6 +6,20 @@ import java.util.List;
 public class Board {
     ChessPiece [][]fields = new ChessPiece[8][8];
 
+    public boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
+        if(position.length() > 2) return false;
+        else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
+            return false;
+        }
+        else if(position.charAt(0) < 'A' || position.charAt(0) >'H') {
+            return false;
+        }
+        else if(position.charAt(1) < '1' || position.charAt(1) > '8') {
+            return false;
+        }
+        return true;
+    }
+
     private int[] getMatrixPosition(String position){   //pretvara iz oblika stringa u oblik citljiv za pristup elementima table kroz matricu
         int i;
         for(i = 0; i < 8; i++){
@@ -40,18 +54,19 @@ public class Board {
         fields[3][7] = new Queen("d8", ChessPiece.Color.Black);
         fields[4][7] = new King("e8", ChessPiece.Color.Black);
     }
+
     public void move(Class type, ChessPiece.Color color, String position) throws IllegalChessMoveException {
         int i,j;
         for(i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
                 if (fields[i][j] instanceof type && color == fields[i][j].getColor()){
-
-                    fields[i][j].move(position);
-
+                    if(checkPathToNewPosition(fields[i][j].getPosition(), position))
+                        fields[i][j].move(position);
                 }
             }
         }
     }
+
     private boolean checkPathToNewPosition(String oldPosition, String newPosition){     //provjerava da li ima figura na putu do pozicije
         int [] oP = getMatrixPosition(oldPosition);
         int [] nP = getMatrixPosition(newPosition);
