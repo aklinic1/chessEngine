@@ -6,7 +6,7 @@ import java.util.List;
 public class Board {
     ChessPiece [][]fields = new ChessPiece[8][8];
 
-    public boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
+    private boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
         if(position.length() > 2) return false;
         else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
             return false;
@@ -67,6 +67,16 @@ public class Board {
                 }
             }
         }
+    }
+
+    public void move(String oldPosition, String newPosition) throws Exception {
+
+        int[] pozicija = getMatrixPosition(oldPosition);
+        int i = pozicija[0], j = pozicija[1];
+        if (checkPosition(oldPosition) || fields[i][j] == null)  //provjerava da li je uopste unesena validna pozcicija te da li na poziciji ima figura
+            throw new IllegalArgumentException("Nema figure na poziciji " + oldPosition);
+        if (checkPosition(newPosition) && checkPathToNewPosition(oldPosition, newPosition))
+            fields[i][j].move(newPosition);
     }
 
     private boolean checkPathToNewPosition(String oldPosition, String newPosition){     //provjerava da li ima figura na putu do pozicije
