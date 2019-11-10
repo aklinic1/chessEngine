@@ -56,10 +56,12 @@ public class Board {
     }
 
     public void move(Class type, ChessPiece.Color color, String position) throws IllegalChessMoveException {
+        if(!checkPosition(position)) throw new IllegalChessMoveException("Ilegalan potez");
         int i,j;
         for(i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
-                if (fields[i][j] instanceof type && color == fields[i][j].getColor()){
+                if (type.isInstance(fields[i][j]) && color == fields[i][j].getColor()){
+                    if(fields[i][j].getPosition() == position) throw new IllegalChessMoveException("Ilegalan potez");
                     if(checkPathToNewPosition(fields[i][j].getPosition(), position))
                         fields[i][j].move(position);
                 }
