@@ -33,9 +33,9 @@ public abstract class ChessPiece {
 
         this.position = position;
     }
-    public abstract boolean checkMove(String position);  //svaka figura ima svoje dozvoljene kretnje
+    protected abstract boolean checkMove(String position);  //svaka figura ima svoje dozvoljene kretnje
 
-    public int[] setComparablePositionValues(String position, String move){
+    protected int[] setComparablePositionValues(String position, String move){
         int [] n = new int[4];
         n[0] = this.position.charAt(0); n[1] = Integer.valueOf(this.position.charAt(1));
         n[2] = position.charAt(0); n[3] = Integer.valueOf(position.charAt(1));
