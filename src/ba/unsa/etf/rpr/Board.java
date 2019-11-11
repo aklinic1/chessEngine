@@ -1,11 +1,13 @@
 package ba.unsa.etf.rpr;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 public class Board {
-    ChessPiece [][]fields = new ChessPiece[8][8];
-
+    private ChessPiece [][]fields = new ChessPiece[8][8];
+    private King blackKing, whiteKing;                  //posto su kraljevi najbitnije figure od cijeg ostojanja igra i zavisi
+                                                                //dodati cemo clanove koji ce u svakom trenutku znati njihovu poziciju;
     private boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
         if(position.length() > 2) return false;
         else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
@@ -51,8 +53,10 @@ public class Board {
         fields[5][7] = new Bishop("f8", ChessPiece.Color.White);
         fields[3][0] = new Queen("d1", ChessPiece.Color.White);
         fields[4][0] = new King("e1", ChessPiece.Color.White);
+        whiteKing = (King)fields[4][0];
         fields[3][7] = new Queen("d8", ChessPiece.Color.Black);
         fields[4][7] = new King("e8", ChessPiece.Color.Black);
+        blackKing = (King)fields[4][7];
     }
 
     public void move(Class type, ChessPiece.Color color, String position) throws IllegalChessMoveException {
@@ -75,8 +79,30 @@ public class Board {
         int i = pozicija[0], j = pozicija[1];
         if (checkPosition(oldPosition) || fields[i][j] == null)  //provjerava da li je uopste unesena validna pozcicija te da li na poziciji ima figura
             throw new IllegalArgumentException("Nema figure na poziciji " + oldPosition);
-        if (checkPosition(newPosition) && checkPathToNewPosition(oldPosition, newPosition))
+        if (checkPosition(newPosition) && checkPathToNewPosition(oldPosition, newPosition)) {
             fields[i][j].move(newPosition);
+            int [] a = getMatrixPosition(newPosition);
+            fields[a[0]][a[1]] = fields[i][j];
+            fields[i][j] = null;
+        }
+    }
+
+    public boolean isCheck(ChessPiece.Color color){
+        int i,j;
+        String kingPosition = new String();
+        if(color == ChessPiece.Color.Black)
+            kingPosition = blackKing.getPosition();
+        else if(color == ChessPiece.Color.White)
+            kingPosition = whiteKing.getPosition();
+        for(i = 0; i < 8; i++){
+            for(j = 0; j < 8; j++){
+                if(fields[i][j] != null && fields[i][j].getColor() != color){
+                    if(checkPathToNewPosition(fields[i][j].getPosition(), kingPosition) && fields[i][j].checkMove(kingPosition))
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean checkPathToNewPosition(String oldPosition, String newPosition){     //provjerava da li ima figura na putu do pozicije
