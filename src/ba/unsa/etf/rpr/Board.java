@@ -37,8 +37,8 @@ public class Board {
     public Board() {
         int i;
         for(i = 0; i < 8; i++){
-            fields[i][1] = new Pawn((char)('a' + i) + String.valueOf(1), ChessPiece.Color.WHITE);
-            fields[i][6] = new Pawn((char)('a' + i) + String.valueOf(6), ChessPiece.Color.BLACK);
+            fields[i][1] = new Pawn((char)('a' + i) + String.valueOf(2), ChessPiece.Color.WHITE);
+            fields[i][6] = new Pawn((char)('a' + i) + String.valueOf(7), ChessPiece.Color.BLACK);
         }
         fields[0][0] = new Rook("a1", ChessPiece.Color.WHITE);
         fields[7][0] = new Rook("a8", ChessPiece.Color.WHITE);
