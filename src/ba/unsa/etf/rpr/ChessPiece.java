@@ -3,9 +3,23 @@ package ba.unsa.etf.rpr;
 public abstract class ChessPiece {
     protected String position;
 
+    private boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
+        if(position.length() > 2) return false;
+        else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
+            return false;
+        }
+        else if(position.charAt(0) < 'A' || position.charAt(0) >'H') {
+            return false;
+        }
+        else if(position.charAt(1) < '1' || position.charAt(1) > '8') {
+            return false;
+        }
+        return true;
+    }
+
     public enum Color{
-        White("W"),
-        Black("B");
+        WHITE("W"),
+        BLACK("B");
         private final String colorVal;
 
         Color(String colorVal){
@@ -17,7 +31,8 @@ public abstract class ChessPiece {
     }
     public static Color color;
 
-    public ChessPiece(String position, Color color) {
+    public ChessPiece(String position, Color color) throws IllegalArgumentException{
+        if(!checkPosition(position)) throw new IllegalArgumentException("Nedozvoljena pozicija!");
         this.position = position;
         this.color = color;
     }
