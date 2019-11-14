@@ -1,16 +1,12 @@
 package ba.unsa.etf.rpr;
 
-import java.util.ArrayList;
-
-import java.util.List;
-
 public class Board {
     private ChessPiece [][]fields = new ChessPiece[8][8];
     private King blackKing, whiteKing;                  //posto su kraljevi najbitnije figure od cijeg ostojanja igra i zavisi
                                                                 //dodati cemo clanove koji ce u svakom trenutku znati njihovu poziciju;
 
     private boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
-        position.toLowerCase();
+        position = position.toLowerCase();
         if(position.length() > 2) return false;
 
         if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
@@ -24,6 +20,7 @@ public class Board {
 
     private int[] getMatrixPosition(String position){   //pretvara iz oblika stringa u oblik citljiv za pristup elementima table kroz matricu
         int i;
+        position = position.toLowerCase();
         for(i = 0; i < 8; i++){
             if(position.charAt(0) - 65 == i || position.charAt(0) - 97 == i)  break;
         }
@@ -72,9 +69,9 @@ public class Board {
         int i,j;
         for(i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
-                if (type.isInstance(fields[i][j]) && color == fields[i][j].getColor()){
-                    if(fields[i][j].getPosition() == position) throw new IllegalChessMoveException("Ilegalan potez");
-                        move(fields[i][j].getPosition(), position);
+                if (type.isInstance(fields[j][i]) && color == fields[j][i].getColor()){
+                    if(fields[j][i].getPosition() == position) throw new IllegalChessMoveException("Ilegalan potez");
+                        move(fields[j][i].getPosition(), position);
                 }
             }
         }
@@ -82,8 +79,8 @@ public class Board {
 
     public void move(String oldPosition, String newPosition) throws Exception {
 
-        oldPosition.toLowerCase();
-        newPosition.toLowerCase();
+        oldPosition = oldPosition.toLowerCase();
+        newPosition = newPosition.toLowerCase();
 
         int[] pozicija = getMatrixPosition(oldPosition);
         int i = pozicija[0], j = pozicija[1];
@@ -97,6 +94,10 @@ public class Board {
             boolean a = false;
             if((i == k && l == j + 1 && fields[i][j].getColor() == ChessPiece.Color.WHITE) ||
                     (i == k && l == j - 1 && fields[i][j].getColor() == ChessPiece.Color.BLACK)){
+                if(fields[k][l] == null) a = true;
+            }
+            else if((i == k && l == j + 2 && fields[i][j].getColor() == ChessPiece.Color.WHITE && j == 6) ||
+                    (i == k && l == j - 2 && fields[i][j].getColor() == ChessPiece.Color.BLACK && j == 1)){
                 if(fields[k][l] == null) a = true;
             }
             else if(fields[k][l] != null && fields[k][l].getColor() != fields[i][j].getColor())
@@ -164,21 +165,22 @@ public class Board {
                 br++;
             }
         }
-        else {              //provjerava horizonatalno i vertikalno
-            if(nP1 == oP1){         //vertikalno
+        else if(nP1 == oP1){         //vertikalno
                 while(br < Math.abs(oP2 - nP2) - 1){
                     if(fields[oP1][oP2 + br2] != null) return false;
                     br++;
                 }
             }
-            else if(nP2 == oP2) {                  //horizontalno
-                while(br < Math.abs(oP1 - nP1) - 1){
-                    if(fields[oP1 + br1][oP2] != null) return false;
-                    br++;
-                }
+        else if(nP2 == oP2) {                  //horizontalno
+            while (br < Math.abs(oP1 - nP1) - 1) {
+                if (fields[oP1 + br1][oP2] != null) return false;
+                br++;
             }
         }
         return true;
     }
 
+    public String getBlackKingPosition() {
+        return blackKing.getPosition();
+    }
 }
