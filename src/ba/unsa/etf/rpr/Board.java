@@ -96,11 +96,11 @@ public class Board {
                     (i == k && l == j - 1 && fields[i][j].getColor() == ChessPiece.Color.BLACK)){
                 if(fields[k][l] == null) a = true;
             }
-            else if((i == k && l == j + 2 && fields[i][j].getColor() == ChessPiece.Color.WHITE && j == 6) ||
-                    (i == k && l == j - 2 && fields[i][j].getColor() == ChessPiece.Color.BLACK && j == 1)){
+            else if((i == k && l == j - 2 && fields[i][j].getColor() == ChessPiece.Color.WHITE && j == 6) ||
+                    (i == k && l == j + 2 && fields[i][j].getColor() == ChessPiece.Color.BLACK && j == 1)){
                 if(fields[k][l] == null) a = true;
             }
-            else if(fields[k][l] != null && fields[k][l].getColor() != fields[i][j].getColor())
+            else if(fields[k][l] != null && Math.abs(i - k) == 1 && Math.abs(j-l) == 1 && fields[k][l].getColor() != fields[i][j].getColor())
                 a = true;
             if(a == true){
                 fields[i][j].move(newPosition);
@@ -161,19 +161,19 @@ public class Board {
 
         if(Math.abs(nP1-oP1) == Math.abs(nP2-oP2)){ //dijagonalno kretanje
             while(br < Math.abs(oP1 - nP1) - 1){
-                if(fields[oP1 + br1][oP2 + br2] != null) return false;
+                if(fields[oP1 + br1 + br1*br][oP2 + br2 + br2*br] != null) return false;
                 br++;
             }
         }
-        else if(nP1 == oP1){         //vertikalno
+        else if(nP1 == oP1){         //horizontalno
                 while(br < Math.abs(oP2 - nP2) - 1){
-                    if(fields[oP1][oP2 + br2] != null) return false;
+                    if(fields[oP1][oP2 + br2 + br] != null) return false;
                     br++;
                 }
             }
-        else if(nP2 == oP2) {                  //horizontalno
+        else if(nP2 == oP2) {                  //vertikalno
             while (br < Math.abs(oP1 - nP1) - 1) {
-                if (fields[oP1 + br1][oP2] != null) return false;
+                if (fields[oP1 + br1 + br][oP2] != null) return false;
                 br++;
             }
         }
