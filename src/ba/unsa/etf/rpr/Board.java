@@ -2,7 +2,7 @@ package ba.unsa.etf.rpr;
 
 public class Board {
     private ChessPiece [][]fields = new ChessPiece[8][8];
-    private King blackKing, whiteKing;                  //posto su kraljevi najbitnije figure od cijeg ostojanja igra i zavisi
+    public King blackKing, whiteKing;                  //posto su kraljevi najbitnije figure od cijeg ostojanja igra i zavisi
                                                                 //dodati cemo clanove koji ce u svakom trenutku znati njihovu poziciju;
 
     private boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
@@ -70,7 +70,7 @@ public class Board {
         boolean a = false;
         for(i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
-                if (type.isInstance(fields[i][j]) /*&& fields[i][j].getColor() == color*/){
+                if (type.isInstance(fields[i][j]) /*&& fields[i][j].getColor().equals(color)*/){
                     if(fields[i][j].getPosition() == position) throw new IllegalChessMoveException("Ilegalan potez");
                     if(fields[i][j].checkMove(position)) {
                         move(fields[i][j].getPosition(), position);
@@ -81,7 +81,7 @@ public class Board {
             }
             if(a == true) break;
         }
-        if(a == false) throw new IllegalChessMoveException("Ilegalan potez!");
+        if(a == false) throw new IllegalChessMoveException("Ilegalan potez!!");
     }
 
     public void move(String oldPosition, String newPosition) throws Exception {
@@ -90,7 +90,6 @@ public class Board {
         newPosition = newPosition.toLowerCase();
         int[] pozicija = getMatrixPosition(oldPosition);
         int i = pozicija[0], j = pozicija[1];
-        System.out.println(i + " " + j);
         int[] pozicija1 = getMatrixPosition(newPosition);
         int k = pozicija1[0], l = pozicija1[1];
         if (fields[i][j] == null)  //provjerava da li je uopste unesena validna pozcicija te da li na poziciji ima figura
@@ -98,15 +97,15 @@ public class Board {
 
         if(fields[i][j] instanceof Pawn){
             boolean a = false;
-            if((i == k && l == j + 1 && fields[i][j].getColor() == ChessPiece.Color.WHITE) ||
-                    (i == k && l == j - 1 && fields[i][j].getColor() == ChessPiece.Color.BLACK)){
+            if((i == k && l == j + 1 && fields[i][j].getColor().equals(ChessPiece.Color.WHITE)) ||
+                    (i == k && l == j - 1 && fields[i][j].getColor().equals(ChessPiece.Color.BLACK))){
                 if(fields[k][l] == null) a = true;
             }
-            else if((i == k && l == j + 2 && fields[i][j].getColor() == ChessPiece.Color.WHITE && j == 1) ||
-                    (i == k && l == j - 2 && fields[i][j].getColor() == ChessPiece.Color.BLACK && j == 6)){
+            else if((i == k && l == j + 2 && fields[i][j].getColor().equals(ChessPiece.Color.WHITE) && j == 1) ||
+                    (i == k && l == j - 2 && fields[i][j].getColor().equals(ChessPiece.Color.BLACK) && j == 6)){
                 if(fields[k][l] == null) a = true;
             }
-            else if(fields[k][l] != null && Math.abs(i - k) == 1 && Math.abs(j-l) == 1 && fields[k][l].getColor() != fields[i][j].getColor())
+            else if(fields[k][l] != null && Math.abs(i - k) == 1 && Math.abs(j-l) == 1 && !fields[k][l].getColor().equals(fields[i][j].getColor()))
                 a = true;
             if(a == true){
                 fields[i][j].move(newPosition);
@@ -115,7 +114,7 @@ public class Board {
             }
         }
         else if(fields[i][j] instanceof Knight){
-            if(fields[k][l] == null || fields[k][l].getColor() != fields[i][j].getColor()){
+            if(fields[k][l] == null || fields[k][l].getColor().equals(fields[i][j].getColor())){
                 fields[i][j].move(newPosition);
                 fields[k][l] = fields[i][j];
                 fields[i][j] = null;
@@ -132,13 +131,13 @@ public class Board {
     public boolean isCheck(ChessPiece.Color color){
         int i,j;
         String kingPosition = new String();
-        if(color == ChessPiece.Color.BLACK)
+        if(color .equals(ChessPiece.Color.BLACK))
             kingPosition = blackKing.getPosition();
-        else if(color == ChessPiece.Color.WHITE)
+        else if(color.equals(ChessPiece.Color.WHITE))
             kingPosition = whiteKing.getPosition();
         for(i = 0; i < 8; i++){
             for(j = 0; j < 8; j++){
-                if(fields[i][j] != null && fields[i][j].getColor() != color){
+                if(fields[i][j] != null && !fields[i][j].getColor().equals(color)){
                     if(checkPathToNewPosition(fields[i][j].getPosition(), kingPosition) && fields[i][j].checkMove(kingPosition))
                         return true;
                 }

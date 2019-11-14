@@ -7,7 +7,7 @@ import static ba.unsa.etf.rpr.ChessPiece.Color.WHITE;
 
 public class Main {
      public static void main(String[] args) {
-         try{
+
          Board chessGame = new Board();
          System.out.println("Igra pocinje : \n");
          int br=0;
@@ -24,7 +24,10 @@ public class Main {
             String pozicija = scanner.nextLine();
 
             if (pozicija == "X") {
-                System.out.println("Igrac sa bojom " + chessPieceColor.getColorVal() + " je izgubio partiju!");
+                String s = new String();
+                if(chessPieceColor == WHITE) s = "bijela";
+                else if (chessPieceColor == BLACK) s = "crna";
+                System.out.println("Igrac sa bojom " + s + " je izgubio partiju!");
                 break;
             }
 
@@ -47,8 +50,13 @@ public class Main {
                 continue;      //throw IllegalArgumentException("Figura na slovo " + pozicija.charAt(0) + " ne postoji");
             }
             pozicija = pozicija.substring(1,3);
-            System.out.println(pozicija);
-            chessGame.move(type, chessPieceColor, pozicija);
+            try {
+                chessGame.move(type, chessPieceColor, pozicija);
+            }
+            catch (Exception e){
+                System.out.println("Nedozvoljen potez, igrajte ponovo: ");
+                br--;
+            }
             if (chessPieceColor == WHITE) {
                 if (chessGame.isCheck(BLACK)) System.out.println("CHECK!!");
             } else {
@@ -56,9 +64,7 @@ public class Main {
             }
             br++;
         }
-    	}
-         catch (Exception e){
 
-         }
+
     }
 }

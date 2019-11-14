@@ -17,16 +17,8 @@ public abstract class ChessPiece {
     }
 
     public enum Color{
-        WHITE("Bijela"),
-        BLACK("Crna");
-        private final String colorVal;
-
-        Color(String colorVal){
-            this.colorVal = colorVal;
-        }
-        public String getColorVal(){
-            return colorVal;
-        }
+        WHITE,
+        BLACK;
     }
     public static Color color;
 
