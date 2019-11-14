@@ -5,7 +5,6 @@ public abstract class ChessPiece {
 
     protected boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
         position = position.toLowerCase();
-
         if(position.length() == 0 || position.length() > 2) return false;
 
         if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
@@ -42,7 +41,7 @@ public abstract class ChessPiece {
         return position;
     }
     public Color getColor(){
-        return color;
+        return this.color;
     }
 
     public void move(String position) throws IllegalChessMoveException, IllegalArgumentException { //prvo provejravamo da li je potez unutar table pa onda da li je validan za neku figuru
