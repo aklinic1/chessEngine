@@ -10,11 +10,10 @@ public class Board {
                                                                 //dodati cemo clanove koji ce u svakom trenutku znati njihovu poziciju;
 
     private boolean checkPosition(String position){  //provjerava da li je pozicija validna tj. unutar sahoveske table, da li je duzina stringa veca od 2
+        position.toLowerCase();
         if(position.length() > 2) return false;
-        else if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
-            return false;
-        }
-        else if(position.charAt(0) < 'A' || position.charAt(0) >'H') {
+
+        if(position.charAt(0) < 'a' || position.charAt(0) > 'h') {
             return false;
         }
         else if(position.charAt(1) < '1' || position.charAt(1) > '8') {
@@ -30,7 +29,7 @@ public class Board {
         }
         int []m = new int[2];
         m[0] = i;
-        m[1] = Integer.valueOf(position.charAt(1));
+        m[1] = Integer.valueOf(position.substring(1,2));
         return m;
     }
 
@@ -42,19 +41,26 @@ public class Board {
         }
         fields[0][0] = new Rook("a1", ChessPiece.Color.WHITE);
         fields[7][0] = new Rook("a8", ChessPiece.Color.WHITE);
+
         fields[0][7] = new Rook("h1", ChessPiece.Color.BLACK);
         fields[7][7] = new Rook("h8", ChessPiece.Color.BLACK);
-        fields[1][0] = new Knight("b1", ChessPiece.Color.BLACK);
-        fields[6][0] = new Knight("g1", ChessPiece.Color.BLACK);
-        fields[1][7] = new Knight("b7", ChessPiece.Color.WHITE);
-        fields[6][7] = new Knight("g7", ChessPiece.Color.WHITE);
+
+        fields[1][0] = new Knight("b1", ChessPiece.Color.WHITE);
+        fields[6][0] = new Knight("g1", ChessPiece.Color.WHITE);
+
+        fields[1][7] = new Knight("b7", ChessPiece.Color.BLACK);
+        fields[6][7] = new Knight("g7", ChessPiece.Color.BLACK);
+
         fields[2][0] = new Bishop("c1", ChessPiece.Color.BLACK);
         fields[5][0] = new Bishop("f1", ChessPiece.Color.BLACK);
+
         fields[2][7] = new Bishop("c8", ChessPiece.Color.WHITE);
         fields[5][7] = new Bishop("f8", ChessPiece.Color.WHITE);
+
         fields[3][0] = new Queen("d1", ChessPiece.Color.WHITE);
         fields[4][0] = new King("e1", ChessPiece.Color.WHITE);
         whiteKing = (King)fields[4][0];
+
         fields[3][7] = new Queen("d8", ChessPiece.Color.BLACK);
         fields[4][7] = new King("e8", ChessPiece.Color.BLACK);
         blackKing = (King)fields[4][7];
@@ -62,6 +68,7 @@ public class Board {
 
     public void move(Class type, ChessPiece.Color color, String position) throws Exception {
         if(!checkPosition(position)) throw new IllegalChessMoveException("Ilegalan potez");
+        position.toLowerCase();
         int i,j;
         for(i = 0; i < 8; i++) {
             for (j = 0; j < 8; j++) {
@@ -75,18 +82,31 @@ public class Board {
 
     public void move(String oldPosition, String newPosition) throws Exception {
 
+        oldPosition.toLowerCase();
+        newPosition.toLowerCase();
+
         int[] pozicija = getMatrixPosition(oldPosition);
         int i = pozicija[0], j = pozicija[1];
         int[] pozicija1 = getMatrixPosition(newPosition);
         int k = pozicija1[0], l = pozicija1[1];
+
         if (checkPosition(newPosition) || fields[i][j] == null)  //provjerava da li je uopste unesena validna pozcicija te da li na poziciji ima figura
             throw new IllegalArgumentException("Nema figure na poziciji " + oldPosition);
+
         if(fields[i][j] instanceof Pawn){
-            if(fields[k][l] != null && fields[k][l].getColor() != fields[i][j].getColor()) {
+            boolean a = false;
+            if((i == k && l == j + 1 && fields[i][j].getColor() == ChessPiece.Color.WHITE) ||
+                    (i == k && l == j - 1 && fields[i][j].getColor() == ChessPiece.Color.BLACK)){
+                if(fields[k][l] == null) a = true;
+            }
+            else if(fields[k][l] != null && fields[k][l].getColor() != fields[i][j].getColor())
+                a = true;
+            if(a == true){
                 fields[i][j].move(newPosition);
                 fields[k][l] = fields[i][j];
                 fields[i][j] = null;
             }
+            else throw new IllegalChessMoveException("ilegalan potez");
         }
         else if(fields[i][j] instanceof Knight){
             if(fields[k][l] == null || fields[k][l].getColor() != fields[i][j].getColor()){
@@ -94,6 +114,7 @@ public class Board {
                 fields[k][l] = fields[i][j];
                 fields[i][j] = null;
             }
+            else throw new IllegalChessMoveException("Ilegalan potez");
         }
         else if (checkPathToNewPosition(oldPosition, newPosition)) {
             fields[i][j].move(newPosition);
@@ -127,15 +148,13 @@ public class Board {
 
         if(fields[nP1][nP2] != null){
             if(fields[nP1][nP2].getColor() == fields[oP1][oP2].getColor()) return false;   //odmah smo provjerili da li je postoji figura na novoj poziciji
-        }                                                                                   //te ako postoji i ako je iste boje potez je neregularan
-
-        int i,j;
+        }                                                                                 //te ako postoji i ako je iste boje potez je neregularan
 
         int br1,br2;
-        if(oP2 > oP1) br1 = 1;
-        else br1 = -1;                  //br1 i br2 nam govore u kojem se smjeru na tabli krecemo
-        if(nP2 > nP1) br2 = 1;
-        else br2 = -1;
+        if(nP2 > oP2) br2 = 1;
+        else br2 = -1;                  //br1 i br2 nam govore u kojem se smjeru na tabli krecemo
+        if(nP1 > oP1) br1 = 1;
+        else br1 = -1;
 
         int br = 0;
 
@@ -152,14 +171,14 @@ public class Board {
                     br++;
                 }
             }
-            else {                  //horizontalno
+            else if(nP2 == oP2) {                  //horizontalno
                 while(br < Math.abs(oP1 - nP1) - 1){
                     if(fields[oP1 + br1][oP2] != null) return false;
                     br++;
                 }
             }
         }
-        return false;
+        return true;
     }
 
 }
